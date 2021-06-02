@@ -5,8 +5,7 @@ import android.app.Activity;
 import com.coder.zzq.toolkit.Utils;
 import com.coder.zzq.toolkit.log.EasyLogger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by 朱志强 on 2018/08/19.
@@ -17,7 +16,7 @@ public final class ActivityStack {
 
     }
 
-    private static List<Activity> sActivitySet;
+    private static LinkedList<Activity> sActivitySet;
 
     public static void push(Activity activity) {
         if (activity != null) {
@@ -45,13 +44,44 @@ public final class ActivityStack {
 
 
     public static Activity getTop() {
-        return isEmpty() ? null : getActivitySet().get(count() - 1);
+        return isEmpty() ? null : getActivitySet().peekLast();
     }
 
 
-    private static List<Activity> getActivitySet() {
+    public static Activity below(Activity activity) {
+        if (activity == null || isEmpty()) {
+            return null;
+        }
+
+        int num = count();
+        for (int index = (num - 1); index >= 0; index--) {
+            if (getActivitySet().get(index) == activity) {
+                return index == 0 ? null : getActivitySet().get(index - 1);
+            }
+        }
+
+        return null;
+    }
+
+    public static Activity above(Activity activity) {
+        if (activity == null || isEmpty()) {
+            return null;
+        }
+
+        int num = count();
+        for (int index = (num - 1); index >= 0; index--) {
+            if (getActivitySet().get(index) == activity) {
+                return index == num - 1 ? null : getActivitySet().get(index + 1);
+            }
+        }
+
+        return null;
+    }
+
+
+    private static LinkedList<Activity> getActivitySet() {
         if (sActivitySet == null) {
-            sActivitySet = new ArrayList<>();
+            sActivitySet = new LinkedList<>();
         }
         return sActivitySet;
     }
