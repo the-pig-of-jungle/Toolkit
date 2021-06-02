@@ -1,6 +1,7 @@
 package com.coder.zzq.toolkit.lifecycle;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.coder.zzq.toolkit.Utils;
 import com.coder.zzq.toolkit.log.EasyLogger;
@@ -72,6 +73,22 @@ public final class ActivityStack {
         for (int index = (num - 1); index >= 0; index--) {
             if (getActivitySet().get(index) == activity) {
                 return index == num - 1 ? null : getActivitySet().get(index + 1);
+            }
+        }
+
+        return null;
+    }
+
+    public static Activity get(Intent intent) {
+        if (intent == null || isEmpty()) {
+            return null;
+        }
+
+        int num = count();
+        for (int index = (num - 1); index >= 0; index--) {
+            Activity activity = getActivitySet().get(index);
+            if (activity.getIntent() == intent) {
+                return activity;
             }
         }
 
