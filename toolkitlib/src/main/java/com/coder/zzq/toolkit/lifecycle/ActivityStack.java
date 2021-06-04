@@ -95,6 +95,22 @@ public final class ActivityStack {
         return null;
     }
 
+    public static Activity get(Condition condition) {
+        if (condition == null || isEmpty()) {
+            return null;
+        }
+
+        int num = count();
+        for (int index = (num - 1); index >= 0; index--) {
+            Activity activity = getActivitySet().get(index);
+            if (condition.check(activity)) {
+                return activity;
+            }
+        }
+
+        return null;
+    }
+
 
     private static LinkedList<Activity> getActivitySet() {
         if (sActivitySet == null) {
@@ -114,5 +130,10 @@ public final class ActivityStack {
 
     public static boolean isInStack(Activity activity) {
         return !isEmpty() && getActivitySet().contains(activity);
+    }
+
+
+    public interface Condition {
+        boolean check(Activity activity);
     }
 }
